@@ -1,6 +1,6 @@
 # Task API
 
-A simple CRUD API for managing a to-do list, built with Node.js and Express. Data is stored in memory (resets when the server restarts).
+A simple CRUD API for managing a to-do list, built with Node.js and Express as part of my internship coursework (Week 2, Assignment 1). Data is stored in memory (resets when the server restarts).
 
 ## Endpoints
 
