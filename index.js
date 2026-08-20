@@ -1,17 +1,39 @@
-const express= require('express');
-const app= express();
-const PORT=3000;
+const express = require('express');
+const app = express();
+
+const PORT = 3000;
+
 const swaggerUi = require('swagger-ui-express');
 const openapiSpec = require('./api.json');
 
+const Database = require('better-sqlite3'); 
+const db = new Database('tasks.db');        
+
 app.use(express.json());
 
-let tasks = [
-  { id: 1, title: "Buy milk", done: false },
-  { id: 2, title: "Walk the dog", done: false },
-  { id: 3, title: "Finish assignment", done: true }
-];
+// array stored method:
+// let tasks = [
+//   { id: 1, title: "Buy milk", done: false },
+//   { id: 2, title: "Walk the dog", done: false },
+//   { id: 3, title: "Finish assignment", done: true }
+// ];
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    done BOOLEAN NOT NULL DEFAULT 0
+  )
+`);
+
+
+const row = db.prepare('SELECT COUNT(*) AS count FROM tasks').get();
+if (row.count === 0) {
+  const insert = db.prepare('INSERT INTO tasks (title, done) VALUES (?, ?)');
+  insert.run('Buy milk', 0);
+  insert.run('Walk the dog', 0);
+  insert.run('Finish assignment', 1);
+}
 
 
 app.get('/', (req, res) => {
@@ -21,7 +43,6 @@ app.get('/', (req, res) => {
     endpoints: ["/tasks"]
   });
 });
-
 
 app.get('/health', (req, res) => {
   res.json({ status: "ok" });
@@ -97,6 +118,6 @@ app.delete('/tasks/:id', (req, res) => {
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
-app.listen(PORT, () =>{
-    console.log(`Server Running http://localhost:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server Running http://localhost:${PORT}`);
 });
