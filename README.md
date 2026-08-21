@@ -30,7 +30,7 @@ This marked every task as done directly in the database — and `GET /tasks` imm
 
 **Screenshot:**
 
-![DB Browser screenshot](.img/updated-db.png)
+![DB Browser screenshot](./img/updated-db.png)
 
 ## Running it
 
